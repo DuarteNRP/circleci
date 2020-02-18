@@ -1,40 +1,144 @@
-version: 2
+version: 2.1
 jobs:
-  one:
+  Build:
+    environment:
+      IMAGE_NAME: $IMG
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
-      - run: echo "A first hello"
-      - run: mkdir -p my_workspace
-      - run: echo "Trying out workspaces" > my_workspace/echo-output
-      - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory
-          root: my_workspace
-          # Must be relative path from root
-          paths:
-            - echo-output      
-  two:
+      - add_ssh_keys:
+          fingerprints:
+            - $SSHFINGERPRINT
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Login to Docker Hub
+          command: docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+          no_output_timeout: 5m
+      - run:
+          name: Decrypt test config
+          command: bin/utils/decrypt config/test.enc config/test.js
+      - run:
+          name: Decrypt test config
+          command: bin/utils/decrypt .env.enc .env
+      ##TODO: test images should be created here if we're to run docker within server
+      - run:
+          name: Building `content-api`
+          command: docker-compose -f docker-compose-test.yml build content-api
+      - run:
+          name: Building `deployer-api`
+          command: docker-compose -f docker-compose-test.yml build deployer-api
+      - run:
+          name: Building `deployer-cron`
+          command: docker-compose -f docker-compose-test.yml build deployer-cron
+      - run:
+          name: Building `deployer-subscriber`
+          command: docker-compose -f docker-compose-test.yml build deployer-subscriber
+      - run:
+          name: Publish `content-api`
+          command: docker-compose -f docker-compose-test.yml push content-api
+      - run:
+          name: Publish `deployer-api`
+          command: docker-compose -f docker-compose-test.yml push deployer-api
+      - run:
+          name: Publish `deployer-cron`
+          command: docker-compose -f docker-compose-test.yml push deployer-cron
+      - run:
+          name: Publish `deployer-subscriber`
+          command: docker-compose -f docker-compose-test.yml push deployer-subscriber
+  Unit:
+    working_directory: /opt/$PATH
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: $IMG
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+    parallelism: 2
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Lint
+          command: yarn lint
+          no_output_timeout: 30m
+      - run:
+          name: Unit tests
+          command: yarn test:unit
+          no_output_timeout: 30m
+      - store_artifacts:
+          path: docs/unit/1.0.0/
+          prefix: unit:coverage
+      - store_artifacts:
+          path: docs/unit/1.0.0/clover.unit.xml
+          prefix: unit:tests
+  Acceptance:
+    machine: true
+    resource_class: large
     steps:
       - checkout
-      - run: echo "A more familiar hi"  
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: my_workspace
-
-      - run: |
-          if [[ $(cat my_workspace/echo-output) == "Trying out workspaces" ]]; then
-            echo "It worked!";
-          else
-            echo "Nope!"; exit 1
-          fi
+      - run:
+         name: Login to Docker Hub
+         command: docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Decrypt .env
+          command: bin/utils/decrypt .env.enc .env
+      - run:
+          name: Decrypt test config
+          command: bin/utils/decrypt config/test.enc config/test.js
+      - run:
+         name: Build containers
+         command: docker-compose -f docker-compose-test.yml build deployer-api
+         no_output_timeout: 30m
+      - run:
+          name: Acceptance Tests for Deployer API
+          command: yarn docker:test:acceptance
+          no_output_timeout: 30m
+      - store_artifacts:
+          path: docs/acceptance/1.0.0/
+          prefix: acceptance:coverage
+      - store_artifacts:
+          path: docs/acceptance/1.0.0/clover.unit.xml
+          prefix: acceptance:tests
+  Integration:
+    machine: true
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+         name: Login to Docker Hub
+         command: docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Decrypt .env
+          command: bin/utils/decrypt .env.enc .env
+      - run:
+          name: Decrypt test config
+          command: bin/utils/decrypt config/test.enc config/test.js
+      - run:
+         name: Build containers
+         command: docker-compose -f docker-compose-test.yml build
+         no_output_timeout: 30m
+      - run:
+          name: Integration Tests
+          command: yarn docker:test:integration
+          no_output_timeout: 30m
+      - store_artifacts:
+          path: docs/integration/1.0.0/
+          prefix: integration:coverage
+      - store_artifacts:
+          path: docs/integration/1.0.0/clover.unit.xml
+          prefix: integration:tests
 workflows:
   version: 2
-  one_and_two:
+  build-and-test:
     jobs:
-      - one
-      - two:
+      - Build
+      - Unit:
           requires:
-            - one
+            - Build
+      - Acceptance:
+          requires:
+            - Unit
+      - Integration:
+          requires:
+            - Acceptance
