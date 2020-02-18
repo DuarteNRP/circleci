@@ -10,7 +10,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - $SSHFINGERPRINT
-      - setup_remote_docker:
       - run:
           name: Login to Docker Hub
           command: docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
