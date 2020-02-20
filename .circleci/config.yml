@@ -1,8 +1,14 @@
 version: 2.1
-jobs:
-  build:
-    docker: 
-      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
-    steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+
+orbs:
+  aws-s3: circleci/aws-s3@1.0.0 #imports the s3 orb in the circleci namespace
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - deploy2s3: # a sample job that would be defined above.
+          steps:
+            - aws-s3/sync: #invokes the sync command declared in the s3 orb
+                from: .
+                to: "s3://mybucket_uri"
+                overwrite: true
