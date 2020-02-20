@@ -1,0 +1,3 @@
+version: 2.1
+orbs:
+  welcome-orb: circleci/welcome-orb@0.4.1
