@@ -10,7 +10,6 @@ orbs:
             description: # a helpful description
             type: string
             default: olleh
-        executor: my_inline_executor
         steps:
           - my_inline_command:
               greeting_name: <<parameters.greeting_name>>
