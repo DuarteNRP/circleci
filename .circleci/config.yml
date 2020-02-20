@@ -146,10 +146,10 @@ workflows:
           name : orbBuild
       - Backend-Unit:
           requires:
-            - test-orb/build
+            - orBuild
       - Frontend-Unit:
           requires:
-            - test-orb/build
+            - orbBuild
       - Integration:
           requires:
-            - test-orb/build
+            - orbBuild
