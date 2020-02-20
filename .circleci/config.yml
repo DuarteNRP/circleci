@@ -14,6 +14,9 @@ orbs:
         steps:
           - my_inline_command:
               greeting_name: <<parameters.greeting_name>>
+       my_test_job:
+        steps:
+          - run: echo "it's almost"
     commands:
       my_inline_command:
         parameters:
@@ -33,7 +36,7 @@ orbs:
 workflows:
   ola:
     jobs:
-      - inline_example/my_inline_job:
+      - inline_example/my_test_job:
           name: mybuild # best practice is to name each orb job
       - inline_example/my_inline_job:
           name: mybuild2
