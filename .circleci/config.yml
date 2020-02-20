@@ -14,7 +14,7 @@ orbs:
         steps:
           - my_inline_command:
               greeting_name: <<parameters.greeting_name>>
-       my_test_job:
+      my_test_job:
         steps:
           - run: echo "it's almost"
     commands:
