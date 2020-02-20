@@ -10,6 +10,7 @@ orbs:
             description: # a helpful description
             type: string
             default: olleh
+        executor: my_inline_executor
         steps:
           - my_inline_command:
               greeting_name: <<parameters.greeting_name>>
@@ -22,6 +23,10 @@ orbs:
           - run: echo "hello <<parameters.greeting_name>>, from the inline command"
     executors:
       my_inline_executor:
+        parameters:
+          version:
+            type: string
+            default: "2.4"
         docker:
           - image: circleci/ruby:<<parameters.version>>
 
