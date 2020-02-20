@@ -4,6 +4,9 @@ description: This is an inline job
 orbs:
   inline_example:
     jobs:
+      my_test_job:
+        steps:
+          - run: echo "it's almost"
       my_inline_job:
         parameters:
           greeting_name:
@@ -14,9 +17,6 @@ orbs:
         steps:
           - my_inline_command:
               greeting_name: <<parameters.greeting_name>>
-      my_test_job:
-        steps:
-          - run: echo "it's almost"
     commands:
       my_inline_command:
         parameters:
