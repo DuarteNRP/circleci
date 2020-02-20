@@ -1,9 +1,40 @@
-orbs:
-  slack: circleci/slack@3.4.2
 version: 2.1
-workflows:
-  your-workflow:
+description: This is an inline job
+
+orbs:
+  inline_example:
     jobs:
-      - slack/approval-notification:
-          message: Pending approval
-          webhook: webhook
+      my_inline_job:
+        parameters:
+          greeting_name:
+            description: # a helpful description
+            type: string
+            default: olleh
+        executor: my_inline_executor
+        steps:
+          - my_inline_command:
+              greeting_name: <<parameters.greeting_name>>
+    commands:
+      my_inline_command:
+        parameters:
+          greeting_name:
+            type: string
+        steps:
+          - run: echo "hello <<parameters.greeting_name>>, from the inline command"
+    executors:
+      my_inline_executor:
+        parameters:
+          version:
+            type: string
+            default: "2.4"
+        docker:
+          - image: circleci/ruby:<<parameters.version>>
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - inline_example/my_inline_job:
+          name: mybuild # best practice is to name each orb job
+      - inline_example/my_inline_job:
+          name: mybuild2
+          greeting_name: world
