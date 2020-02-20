@@ -1,4 +1,10 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@0.1.0
-  heroku: circleci/heroku@0.0.1
+  slack: circleci/slack@x.y.z
+version: 2.1
+workflows:
+  your-workflow:
+    jobs:
+      - slack/approval-notification:
+          message: Pending approval
+          webhook: webhook
