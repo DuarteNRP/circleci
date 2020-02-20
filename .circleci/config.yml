@@ -1,3 +1,4 @@
 version: 2.1
 orbs:
-  codecov: codecov/codecov@1.0.5
+  slack: circleci/slack@0.1.0
+  heroku: circleci/heroku@0.0.1
