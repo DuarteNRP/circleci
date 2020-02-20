@@ -31,7 +31,7 @@ orbs:
           - image: circleci/ruby:<<parameters.version>>
 
 workflows:
-  build-test-deploy:
+  ola:
     jobs:
       - inline_example/my_inline_job:
           name: mybuild # best practice is to name each orb job
