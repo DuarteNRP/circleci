@@ -5,4 +5,3 @@ workflows:
   example-workflow:
     jobs:
       - probely/scan:
-          target_id: test
