@@ -4,4 +4,5 @@ version: 2.1
 workflows:
   example-workflow:
     jobs:
-      - probely/scan
+      - probely/scan:
+          target_id: probely_target_id
