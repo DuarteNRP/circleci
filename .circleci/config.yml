@@ -6,4 +6,3 @@ workflows:
     jobs:
       - probely/scan:
           target_id: 36oFYYRFkkuR
-          api_key: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIzdE5hcG5EYW15UzUifQ.soF0lOS6eD7sZh8NwVvJxrVYArjei8fNVuvRSdyPu4o
