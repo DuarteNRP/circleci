@@ -13,6 +13,7 @@ jobs:
         target_id: 36oFYYRFkkuR
         
 workflows:
-  examplse-workflow:
+  version: 2
+  example-workflows:
     jobs:
       - scantest
