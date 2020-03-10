@@ -4,10 +4,15 @@ orbs:
   probely: probely/security-scan@1.1.2
 
 jobs:
-  build:
+  scantest:
     executor: ci-base
     steps:
     - run: exit 0 # toggle this to force success or status for testing
     - probely/scan:
         # Remember to set the PROBELY_API_KEY environment variable!
         target_id: 36oFYYRFkkuR
+        
+workflows:
+  examplse-workflow:
+    jobs:
+      - scantest
