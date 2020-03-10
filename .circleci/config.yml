@@ -4,7 +4,7 @@ orbs:
   probely: probely/security-scan@1.1.2
 
 jobs:
-  scantest:
+  build:
     executor: ci-base
     steps:
     - run: exit 0 # toggle this to force success or status for testing
