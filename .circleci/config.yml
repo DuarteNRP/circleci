@@ -5,7 +5,7 @@ orbs:
 
 jobs:
   build:
-    executor: ci-base
+    executor: alpine
     steps:
     - run: exit 0 # toggle this to force success or status for testing
     - probely/scan:
