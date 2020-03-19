@@ -30,7 +30,7 @@ jobs:
           at: /tmp/workspace
 
       - run: |
-          myid = $(cat /tmp/workspace/echo-output)
+          myid = `cat /tmp/workspace/echo-output`
           echo $myid
           exit 0
 
