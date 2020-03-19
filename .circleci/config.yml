@@ -30,11 +30,9 @@ jobs:
           at: /tmp/workspace
 
       - run: |
-          if [[ `cat /tmp/workspace/echo-output` == "Hello, world!!" ]]; then
-            echo "It worked!";
-          else
-            echo "Nope!"; exit 1
-          fi
+          myid = cat /tmp/workspace/echo-output
+          echo $myid
+          exit 0
 
 workflows:
   version: 2
