@@ -29,10 +29,8 @@ jobs:
           # Must be absolute path or relative path from working_directory
           at: /tmp/workspace
 
-      - run: |
-          myid = "ola"
-          echo "$myid"
-          exit 0
+      - run: myid=ola
+      - run: echo $myid
 
 workflows:
   version: 2
