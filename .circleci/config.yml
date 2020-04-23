@@ -15,7 +15,7 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIyVG9xOWVmcnl0TXAifQ.pEUmpI73I5uGtmXLl1c1trP_QsNKfU-WdhO_asmyJmg")
           echo id:$myid
-          exit ?
+          exit $?
         name: Probely - Starting Security Scan
 
 workflows:
