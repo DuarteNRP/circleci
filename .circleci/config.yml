@@ -13,7 +13,7 @@ jobs:
           myid=$(curl https://api.probely.com/targets/36oFYYRFkkuR/scan_now/ \
             -X POST \
             -H "Content-Type: application/json" \
-            -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIyVG9xOWVmcnl0TXAifQ.pEUmpI73I5uGtmXLl1c1trP_QsNKfU-WdhO_asmyJmg")
+            -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIyVG9xOWVmcnl0TXAifQ.pEUmpI73I5uGtmXLl1c1trP_QsNKfU-WdhO_asmyJmg"| jq'.user_data')
           echo id:$myid
           exit $?
         name: Probely - Starting Security Scan
