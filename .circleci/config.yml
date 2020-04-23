@@ -8,7 +8,6 @@ jobs:
   flow:
     executor: my-executor
     steps:
-      - run: mkdir -p workspace
       - run: 
         command: |
           myid=$(curl https://api.probely.com/targets/36oFYYRFkkuR/scan_now/ \
@@ -21,7 +20,6 @@ jobs:
 
 workflows:
   version: 2
-
   btd:
     jobs:
       - flow
