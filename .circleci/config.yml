@@ -8,7 +8,7 @@ jobs:
   flow:
     executor: my-executor
     steps:
-      - run: 
+    - run: 
         command: |
           myid=$(curl https://api.probely.com/targets/36oFYYRFkkuR/scan_now/ \
             -X POST \
