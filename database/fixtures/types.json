@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "store",
+    "created_at": "2019-07-03",
+    "updated_at": "2019-07-03"
+  },
+  {
+    "slug": "order",
+    "created_at": "2019-07-03",
+    "updated_at": "2019-07-03"
+  },
+  {
+    "slug": "user",
+    "created_at": "2019-07-03",
+    "updated_at": "2019-07-03"
+  },
+  {
+    "slug": "product",
+    "created_at": "2019-07-03",
+    "updated_at": "2019-07-03"
+  }
+]

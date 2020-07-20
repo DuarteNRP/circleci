@@ -1,0 +1,97 @@
+{
+  "name": "cestos-api",
+  "version": "0.0.1",
+  "description": "cestos api",
+  "repository": "git@github.com:gabrieloptionq/cestos-api.git",
+  "license": "ISC",
+  "author": "gabriel.gomes@optionq.pt",
+  "main": "",
+  "scripts": {
+    "cm": "git-cz",
+    "db": "npx sequelize --config database/config.js --models-path database/models/ --migrations-path database/migrations/",
+    "db:all": "yarn db:migrate && yarn db:seed",
+    "db:migrate": "yarn db db:migrate",
+    "db:seed": "yarn db db:seed:all",
+    "postinstall": "link-module-alias",
+    "lint": "yarn npx eslint --config .eslintrc.js database/ config/ src/ test/",
+    "migrate": "npx sequelize-cli db:migrate --to 20200630064510-create-type.js && npx sequelize-cli db:migrate --from 20200710150837-create-entity.js --to 20200710151059-create-blob.js && npx sequelize-cli db:migrate --to 20200710150837-create-entity.js",
+    "npx": "npx --no-install",
+    "test": "yarn test:unit",
+    "test:unit": "yarn jest -c test/jest.config.unit.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint --fix && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "database/**/*.js": [
+      "yarn prettier --write",
+      "yarn lint --fix",
+      "git add"
+    ],
+    "src/**/*.js": [
+      "yarn prettier --write",
+      "yarn lint --fix",
+      "git add"
+    ],
+    "test/**/*.js": [
+      "yarn prettier --write",
+      "yarn lint --fix",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "config": "^3.3.1",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "fast-json-stable-stringify": "^2.1.0",
+    "link-module-alias": "^1.2.0",
+    "lodash": "^4.17.15",
+    "pg": "^8.2.1",
+    "postgres": "^1.0.2",
+    "sequelize": "^5"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cz-conventional-changelog": "^3.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-filenames": "^1.3.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-lodash": "^6.0.0",
+    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-sort-class-members": "^1.6.0",
+    "eslint-plugin-sort-imports-es6": "^0.0.3",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.5.0",
+    "eslint-plugin-sql-template": "^2.0.0",
+    "faker": "^4.1.0",
+    "husky": "^4.2.3",
+    "jest": "^25.2.7",
+    "jest-extended": "^0.11.5",
+    "lint-staged": "^10.0.9",
+    "nodemon": "^2.0.2",
+    "prettier": "^2.0.2",
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=12.14.1",
+    "yarn": ">=1.17.3"
+  },
+  "_moduleAliases": {
+    "services": "src/services/",
+    "database": "database/",
+    "models": "database/models",
+    "config": "config/",
+    "src": "src/"
+  }
+}

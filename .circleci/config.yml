@@ -1,25 +1,50 @@
-version: 2.1
-
-executors:
-  my-executor:
-    docker:
-      - image: buildpack-deps:jessie
+version: 2
 jobs:
-  flow:
-    executor: my-executor
-    steps:
-    - run: 
-        command: |
-          myid=$(curl https://api.probely.com/targets/36oFYYRFkkuR/scan_now/ \
-            -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIyVG9xOWVmcnl0TXAifQ.pEUmpI73I5uGtmXLl1c1trP_QsNKfU-WdhO_asmyJmg"| jq '.user_data')
-          echo id:$myid
-          exit $?
-        name: Probely - Starting Security Scan
+  build:
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/node:12.14
+      # The below environemnt is where you set the .env variables used throughout node
+        environment:
+          NODE_ENV: test
+          PG_USER: root
+          PG_DATABASE: cestos
+          PG_PORT: 5432
 
-workflows:
-  version: 2
-  btd:
-    jobs:
-      - flow
+      - image: circleci/postgres:9.6.2-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: cestos
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+
+      - run:
+          name: Install local dependencies
+          command: yarn install
+
+      - run:
+          name: Analyze and fix code
+          command: yarn lint --fix
+
+      - run:
+          name: Wait for Postgres to start
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Migrate the tables
+          command: yarn db:all
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Running Tests
+          command: yarn test
