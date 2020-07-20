@@ -1,25 +1,33 @@
 version: 2.1
 
-executors:
-  my-executor:
-    docker:
-      - image: buildpack-deps:jessie
 jobs:
-  flow:
-    executor: my-executor
+  Unit:
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/node:12.14
     steps:
-    - run: 
-        command: |
-          myid=$(curl https://api.probely.com/targets/36oFYYRFkkuR/scan_now/ \
-            -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnQiOiJwcm9iZWx5IiwidXNlcm5hbWUiOiIzcUZGd0pjUHFXdWQiLCJqdGkiOiIyVG9xOWVmcnl0TXAifQ.pEUmpI73I5uGtmXLl1c1trP_QsNKfU-WdhO_asmyJmg"| jq '.user_data')
-          echo id:$myid
-          exit $?
-        name: Probely - Starting Security Scan
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+          no_output_timeout: 30m
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Unit tests
+          command: yarn test
+          no_output_timeout: 30m
+      - run:
+          name: Syntax and code tests
+          command: yarn lint --fix
+          no_output_timeout: 30m
 
 workflows:
   version: 2
-  btd:
+  build-and-test:
     jobs:
-      - flow
+      - Unit
