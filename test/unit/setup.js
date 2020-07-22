@@ -1,4 +1,4 @@
-/* const _ = require('lodash');
+const _ = require('lodash');
 const faker = require('faker');
 const sequelizeClient = require('src/clients/sequelize-client');
 const OrderService = require('services/order-service');
@@ -71,4 +71,4 @@ afterAll(async () => {
   await db.sequelize.close();
 });
 
-module.exports = setupMock; */
+module.exports = setupMock;
