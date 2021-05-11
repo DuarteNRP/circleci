@@ -78,7 +78,7 @@
     "express": "^4.17.1",
     "fast-json-stable-stringify": "^2.1.0",
     "link-module-alias": "^1.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "pg": "^8.2.1",
     "postgres": "^1.0.2",
     "sequelize": "^5"
